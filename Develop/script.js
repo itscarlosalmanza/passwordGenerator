@@ -82,6 +82,8 @@ var charTypeUpper = null;
 var charTypeNumeric = null;
 var charTypeSpecial = null;
 
+var critArray = new Array();
+
 // Write password to the #password input
 function writePassword() {
   var password = generatePassword();
@@ -127,29 +129,27 @@ function writePassword() {
     charTypeNumeric = confirm("W0uld y0u l1ke t0 1nclude numer1c characters?");
     charTypeSpecial = confirm("Would you like to include special characters?");
   }
+
   //This will generate the password
   function generatePassword() {
-    
     if (parseInt(passwordLength) > 8 && parseInt(passwordLength) < 128) {
-      //Final password array
+      // Final password array
       var pwArray = new Array();
-      //This array will used to select random values based on user input
+      // This array will used to select random values based on user input
       var critArray = new Array();
     }
-
+    var pwArray = new Array();
     //This statement will run through password criteria selections if user gave a true answer to the alert, then randomize.
 
     if (charTypeLower === true) {
-      pwArray.push(
-        lowercase[Math.floor(Math.random() * lowercase.length)]
-      );
-      critArray = critArray.concat(lowercase);
+      console.log("this fired");
+      pwArray = critArray.concat(lowercase);
+      pwArray.push(lowercase[Math.floor(Math.random() * lowercase.length)]);
+      // critArray = critArray.concat(lowercase);
     }
 
     if (charTypeUpper === true) {
-      pwArray.push(
-        uppercase[Math.floor(Math.random() * uppercase.length)]
-      );
+      pwArray.push(uppercase[Math.floor(Math.random() * uppercase.length)]);
       critArray = critArray.concat(uppercase);
     }
 
@@ -161,15 +161,21 @@ function writePassword() {
     if (charTypeSpecial === true) {
       pwArray.push(special[Math.floor(Math.random() * special.length)]);
       critArray = critArray.concat(special);
-    }
+    // }
+    // console.log(pwArray);
+    for (var i = 0; i < parseInt(passwordLength); i++) {
+      var critArray = critArray[Math.floor(Math.random() * critArray.length)];
+      // pwArray.push(critArray[Math.floor(Math.random() * critArray.length)]);
+      pwArray.push(critArray);
+      console.log(pwArray);
+    } // Takes random value of criteria and adds it to pwArray until the desired length is reached
+    // for (var i = 0; i < parseInt(passwordLength); i++) {
+    //   pwArray[i] = critArray[Math.floor(Math.random() * critArray.length)];
+    //   // pwArray.push(critArray[Math.floor(Math.random() * critArray.length)]);
+    //   console.log(pwArray);
+    // }
 
-    // Takes random value of criteria and adds it to pwArray until the desired length is reached
-    for (var i = pwArray.length; i < parseInt(passwordLength); i++) {
-      pwArray[i] =
-        critArray[Math.floor(Math.random() * critArray.length)];
-    }
-
-    // returns value of pwArray with no spaces 
+    // returns value of pwArray with no spaces
     return pwArray.join("");
   }
 }
