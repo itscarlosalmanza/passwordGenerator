@@ -76,108 +76,115 @@ var special = [
   "&",
   "?",
 ];
-var passwordLength = " ";
-var charTypeLower = null;
-var charTypeUpper = null;
-var charTypeNumeric = null;
-var charTypeSpecial = null;
 
-var critArray = new Array();
+function userPrompts() {
+  var passwordLength = parseInt(
+    prompt(
+      "What is the desired length of you password? Must be between 8-128 characters."
+    )
+  );
+  // console.log(passwordLength);
+  if (isNaN(passwordLength) === true) {
+    alert("PW length must be a number");
+    return;
+  }
 
-// Write password to the #password input
+  if (passwordLength < 8) {
+    alert("PW length mut be at least 8 characters");
+    return;
+  }
+
+  if (passwordLength > 128) {
+    alert("PW must be less than 128 chracters");
+    return;
+  }
+
+  
+    alert("Please select at least one criteria for password.");
+
+    var charTypeLower = confirm(
+      "should the password include lowercase characters?"
+    );
+    // console.log(charTypeLower);
+
+    var charTypeUpper = confirm(
+      "SHOULD THE PASSWORD INCLUDE UPPERCASE CHARACTERS?"
+    );
+    // console.log(charTypeUpper);
+
+    var charTypeNumeric = confirm(
+      "W0uld y0u l1ke t0 1nclude numer1c characters?"
+    );
+    // console.log(charTypeNumeric);
+
+    var charTypeSpecial = confirm(
+      "Would you like to include special characters?"
+    );
+    // console.log(charTypeSpecial);
+    if (
+      charTypeLower === false &&
+      charTypeUpper === false &&
+      charTypeNumeric === false &&
+      charTypeSpecial === false
+    ) {
+    alert("Must choose at least one type of character");
+    return;
+  }
+
+  
+  var critArray = {
+    passwordLength: passwordLength,
+    charTypeLower: charTypeLower,
+    charTypeUpper: charTypeUpper,
+    charTypeNumeric: charTypeNumeric,
+    charTypeSpecial: charTypeSpecial
+  };
+  console.log(critArray);
+  return critArray;
+}
+  
+
+function getRandom(arr) {
+  var randIndex = Math.floor(Math.random() * arr.length);
+  var randElement = arr[randIndex];
+  return randElement;
+}
+function generatePassword() {
+  var options = userPrompts();
+  var result = [];
+  var possibleCharacters = [];
+  var guaranteedCharacters = [];
+
+  if (options.charTypeLower) {
+    possibleCharacters = possibleCharacters.concat(lowercase);
+    guaranteedCharacters.push(getRandom(lowercase));
+  }
+  if (options.charTypeUpper) {
+    possibleCharacters = possibleCharacters.concat(uppercase);
+    guaranteedCharacters.push(getRandom(uppercase));
+  }
+  if (options.charTypeNumeric) {
+    possibleCharacters = possibleCharacters.concat(numeric);
+    guaranteedCharacters.push(getRandom(numeric));
+  }
+  if (options.charTypeSpecial) {
+    possibleCharacters = possibleCharacters.concat(special);
+    guaranteedCharacters.push(getRandom(special));
+  }
+  for (var i = 0; i < options.passwordLength; i++) {
+    var possibleCharacter = getRandom(possibleCharacters);
+    result.push(possibleCharacter);
+  }
+  for (var i = 0; i < guaranteedCharacters.length; i++) {
+    result[i] = guaranteedCharacters[i];
+  }
+  return result.join("");
+}
+var generateBtn = document.querySelector("#generate");
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
-
-  // Prompts user, sets variable for the password criteria of lenghth
-  alert("Select the criteria you would like for your password.");
-  passwordLength = prompt(
-    "What is the desired length of you password? Must be between 8-128 characters."
-  );
-
-  // Makes sure user is inputing a valid length for the password
-  while (parseInt(passwordLength) < 8 || parseInt(passwordLength) > 128) {
-    passwordLength = prompt(
-      "Length is invalid, please enter a value between 8-128 characters."
-    );
-  }
-  //Next 4 questions the user will confirm character criteria. YES = OK or NO = Cancel
-  charTypeLower = confirm("should the password include lowercase characters?");
-
-  charTypeUpper = confirm("SHOULD THE PASSWORD INCLUDE UPPERCASE CHARACTERS?");
-
-  charTypeNumeric = confirm("W0uld y0u l1ke t0 1nclude numer1c characters?");
-
-  charTypeSpecial = confirm("Would you like to include special characters?");
-
-  // Makes sure user selects atleast one criteria
-  while (
-    charTypeLower === false &&
-    charTypeUpper === false &&
-    charTypeNumeric === false &&
-    charTypeSpecial === false
-  ) {
-    alert("Please select at least one criteria for password.");
-    charTypeLower = confirm(
-      "should the password include lowercase characters?"
-    );
-    charTypeUpper = confirm(
-      "SHOULD THE PASSWORD INCLUDE UPPERCASE CHARACTERS?"
-    );
-    charTypeNumeric = confirm("W0uld y0u l1ke t0 1nclude numer1c characters?");
-    charTypeSpecial = confirm("Would you like to include special characters?");
-  }
-
-  //This will generate the password
-  function generatePassword() {
-    if (parseInt(passwordLength) > 8 && parseInt(passwordLength) < 128) {
-      // Final password array
-      var pwArray = new Array();
-      // This array will used to select random values based on user input
-      var critArray = new Array();
-    }
-    var pwArray = new Array();
-    //This statement will run through password criteria selections if user gave a true answer to the alert, then randomize.
-
-    if (charTypeLower === true) {
-      console.log("this fired");
-      pwArray = critArray.concat(lowercase);
-      pwArray.push(lowercase[Math.floor(Math.random() * lowercase.length)]);
-      // critArray = critArray.concat(lowercase);
-    }
-
-    if (charTypeUpper === true) {
-      pwArray.push(uppercase[Math.floor(Math.random() * uppercase.length)]);
-      critArray = critArray.concat(uppercase);
-    }
-
-    if (charTypeNumeric === true) {
-      pwArray.push(numeric[Math.floor(Math.random() * numeric.length)]);
-      critArray = critArray.concat(numeric);
-    }
-
-    if (charTypeSpecial === true) {
-      pwArray.push(special[Math.floor(Math.random() * special.length)]);
-      critArray = critArray.concat(special);
-    // }
-    // console.log(pwArray);
-    for (var i = 0; i < parseInt(passwordLength); i++) {
-      var critArray = critArray[Math.floor(Math.random() * critArray.length)];
-      // pwArray.push(critArray[Math.floor(Math.random() * critArray.length)]);
-      pwArray.push(critArray);
-      console.log(pwArray);
-    } // Takes random value of criteria and adds it to pwArray until the desired length is reached
-    // for (var i = 0; i < parseInt(passwordLength); i++) {
-    //   pwArray[i] = critArray[Math.floor(Math.random() * critArray.length)];
-    //   // pwArray.push(critArray[Math.floor(Math.random() * critArray.length)]);
-    //   console.log(pwArray);
-    // }
-
-    // returns value of pwArray with no spaces
-    return pwArray.join("");
-  }
 }
 
 // Add event listener to generate button
